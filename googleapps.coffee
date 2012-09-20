@@ -29,6 +29,9 @@ module.exports = (domain, options = {}) ->
           res.writeHead 403, error
           return res.end()
     else
+      unless !options.private_urls or options.private_urls.indexOf(req.url) != -1
+          return next()
+
       oRelyingParty.authenticate "https://www.google.com/accounts/o8/site-xrds?hd=#{domain}", false, (error, authUrl) ->
         if not authUrl
           res.writeHead 500, 'google auth error'
