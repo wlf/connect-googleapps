@@ -9,12 +9,18 @@
     if (options == null) {
       options = {};
     }
+    if (options.stateless == null) {
+      options.stateless = true;
+    }
+    if (options.strict == null) {
+      options.strict = false;
+    }
     oExtensions = [
       new openid.AttributeExchange({
         'http://axschema.org/contact/email': 'required'
       })
     ];
-    oRelyingParty = new openid.RelyingParty('', null, true, false, oExtensions);
+    oRelyingParty = new openid.RelyingParty('', null, options.stateless, options.strict, oExtensions);
     return function(req, res, next) {
       oRelyingParty.returnUrl = "http" + (options.secure ? 's' : '') + "://" + req.headers.host + "/_auth";
       if (req.session.authenticated) {

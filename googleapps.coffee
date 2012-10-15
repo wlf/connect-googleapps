@@ -1,8 +1,10 @@
 openid = require('openid')
 
 module.exports = (domain, options = {}) ->
+  options.stateless = true unless options.stateless?
+  options.strict = false unless options.strict?
   oExtensions = [new openid.AttributeExchange('http://axschema.org/contact/email': 'required')]
-  oRelyingParty = new openid.RelyingParty('', null, true, false, oExtensions)
+  oRelyingParty = new openid.RelyingParty('', null, options.stateless, options.strict, oExtensions)
 
   return (req, res, next) ->
     oRelyingParty.returnUrl = "http#{if options.secure then 's' else ''}://#{req.headers.host}/_auth"
