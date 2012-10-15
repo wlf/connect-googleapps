@@ -28,7 +28,7 @@
       }
       if (/^\/_auth/.test(req.url)) {
         return oRelyingParty.verifyAssertion(req, function(error, result) {
-          if (result != null ? result.authenticated : void 0) {
+          if (!error && (result != null ? result.authenticated : void 0)) {
             if (result.claimedIdentifier.indexOf(domain) === -1) {
               res.writeHead(403, error);
               return res.end();
@@ -42,8 +42,8 @@
             req.session.returnTo = null;
             return res.end();
           } else {
-            console.log(result);
-            res.writeHead(403, error);
+            console.log(error, result);
+            res.writeHead(403, error.message);
             return res.end();
           }
         });

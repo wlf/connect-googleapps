@@ -14,7 +14,7 @@ module.exports = (domain, options = {}) ->
 
     if /^\/_auth/.test(req.url)
       oRelyingParty.verifyAssertion req, (error, result) ->
-        if result?.authenticated
+        if not error and result?.authenticated
           if result.claimedIdentifier.indexOf(domain) == -1
             res.writeHead 403, error
             return res.end()
@@ -27,8 +27,8 @@ module.exports = (domain, options = {}) ->
           return res.end()
 
         else
-          console.log(result)
-          res.writeHead 403, error
+          console.log(error, result)
+          res.writeHead 403, error.message
           return res.end()
     else
       unless !options.private_urls or options.private_urls.indexOf(req.url) != -1
